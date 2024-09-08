@@ -8,6 +8,10 @@ HINSTANCE hInst;                                // текущий экземпл
 WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
 WCHAR szWindowClass[MAX_LOADSTRING];            // имя класса главного окна
 
+DWORD g_uThCount = 0;                           //Количество потоков
+HANDLE hSecThread[3] = { nullptr, nullptr, nullptr }; // Дескрипторы потоков
+DWORD dwSecThreadId[3] = { 0, 0, 0 };                  //Идентификаторы потоков
+
 
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -101,6 +105,117 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // Разобрать выбор в меню:
             switch (wmId)
             {
+                // Поток 1
+            case ID_THREAD1_CREATE_THREAD:
+            {
+                ThreadParams threadParams1(hWnd, 1, 150, 100);
+                CreateUserThread(threadParams1); // Создаем поток 1
+                break;
+            }          
+            case ID_THREAD1_CREATE_WAITING_THREAD:
+            {
+                ThreadParams threadParams1(hWnd, 1);
+                CreateWaitingThread(threadParams1); // Создаем ожидающий поток 1
+                break;
+            }
+                
+            case ID_THREAD1_SUSPEND_THREAD:
+            {
+                ThreadParams threadParams1(hWnd, 1);
+                SuspendThread(threadParams1); // Приостанавливаем поток 1
+                break;
+            }
+            case ID_THREAD1_CONTINUE_WORK_THREAD:
+            {
+                ThreadParams threadParams1(hWnd, 1);
+                ContinueThread(threadParams1); // Возобновляем работу потока 1
+                break;
+            }
+            case ID_THREAD1_DESTROY_THREAD:
+            {
+                ThreadParams threadParams1(hWnd, 1);
+                DestroyUserThread(threadParams1, FALSE); // Завершаем поток 1
+                InvalidateRect(hWnd, NULL, TRUE);
+                break;
+            }
+            case ID_THREAD1_INCREASE_PRIORITY:
+            {
+                ThreadParams threadParams1(hWnd, 1);
+                IncreasePriorityThread(threadParams1); // Увеличиваем приоритет потока 1
+                break;
+            }
+            case ID_THREAD1_DECREASE_PRIORITY:
+            {
+                ThreadParams threadParams1(hWnd, 1);
+                DecreasePriorityThread(threadParams1); // Уменьшаем приоритет потока 1
+                break;
+            }
+                
+                // Поток 2
+            case ID_THREAD2_CREATE_THREAD:
+            {
+                ThreadParams threadParams2(hWnd, 2, 150, 140);
+                CreateUserThread(threadParams2); // Создаем поток 2
+                break;
+            }
+            case ID_THREAD2_CREATE_WAITING_THREAD:
+            {
+                ThreadParams threadParams2(hWnd, 2); 
+                CreateWaitingThread(threadParams2); // Создаем ожидающий поток 2
+                break;
+            }
+            case ID_THREAD2_SUSPEND_THREAD:
+            {
+                ThreadParams threadParams2(hWnd, 2); 
+                SuspendThread(threadParams2); // Приостанавливаем поток 2
+                break;
+            }
+            case ID_THREAD2_CONTINUE_WORK_THREAD:
+            {
+                ThreadParams threadParams2(hWnd, 2); 
+                ContinueThread(threadParams2); // Возобновляем работу потока 2
+                break;
+            }
+            case ID_THREAD2_DESTROY_THREAD:
+            {
+                ThreadParams threadParams2(hWnd, 2); 
+                DestroyUserThread(threadParams2, FALSE); // Завершаем поток 2
+                InvalidateRect(hWnd, NULL, TRUE);
+                break;
+            }
+            case ID_THREAD2_INCREASE_PRIORITY:
+            {
+                ThreadParams threadParams2(hWnd, 2); 
+                IncreasePriorityThread(threadParams2); // Увеличиваем приоритет потока 2
+                break;
+            }
+            case ID_THREAD2_DECREASE_PRIORITY:
+            {
+                ThreadParams threadParams2(hWnd, 2);
+                DecreasePriorityThread(threadParams2); // Уменьшаем приоритет потока 2
+                break;
+            }
+
+                // Информация о потоках
+            case ID_THREADSINFORMATION_PRIMARY_THREAD:
+            {
+                ThreadParams threadParams0(hWnd, 0);
+                ShowThreadInfo(threadParams0); // Информация о основном потоке
+                break;
+            }
+            case ID_THREADSINFORMATION_THREAD1:
+            {
+                ThreadParams threadParams1(hWnd, 1);
+                ShowThreadInfo(threadParams1); // Информация о потоке 1
+                break;
+            }
+            case ID_THREADSINFORMATION_THREAD2:
+            {
+                ThreadParams threadParams2(hWnd, 2);
+                ShowThreadInfo(threadParams2); // Информация о потоке 2
+                break;
+            }
+
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
@@ -120,8 +235,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     case WM_DESTROY:
+    {
+        ThreadParams threadParams0(hWnd, 0);
+        ThreadParams threadParams1(hWnd, 1);
+        ThreadParams threadParams2(hWnd, 2);
+
+        DestroyUserThread(threadParams1, TRUE);
+        DestroyUserThread(threadParams1, TRUE);
+        DestroyUserThread(threadParams2, TRUE);
         PostQuitMessage(0);
         break;
+    }
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }

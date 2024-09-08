@@ -131,9 +131,12 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SP_LB2-2.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="ThreadsControlFuncs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SP_LB2-2.cpp" />
+    <ClCompile Include="ThreadsControlFuncs.cpp" />
+    <ClCompile Include="ThreadsFuncs.cpp" />
     <ClCompile Include="wndProc.cpp" />
   </ItemGroup>
   <ItemGroup>
