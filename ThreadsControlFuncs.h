@@ -10,6 +10,7 @@ extern HANDLE hSecThread[3];
 // Threads identifiers
 extern DWORD dwSecThreadId[3];
 
+// Structure for thread parameters
 struct ThreadParams
 {
     int Num;
@@ -22,6 +23,17 @@ struct ThreadParams
     {
     }
 };
+
+//Structure for storing thread information
+struct ThreadInfo
+{
+    DWORD dwThreadId;
+    HANDLE hThread;
+    DWORD dwThreadState;
+    int nThreadPriority;
+    ULONGLONG ullThreadStartTime;
+};
+
 
 /// <summary>
 /// Creates a new thread.
@@ -39,7 +51,7 @@ void CreateWaitingThread(ThreadParams thParams);
 /// Suspends the execution of the specified thread.
 /// </summary>
 /// <param name="thParams">Structure containing thread parameters.</param>
-void SuspendThread(ThreadParams thParams);
+void SuspendUserThread(ThreadParams thParams);
 
 /// <summary>
 /// Resumes the execution of the specified thread.
@@ -70,7 +82,7 @@ void DecreasePriorityThread(ThreadParams thParams);
 /// Displays information about the specified thread.
 /// </summary>
 /// <param name="thParams">Structure containing thread parameters.</param>
-void ShowThreadInfo(ThreadParams thParams);
+BOOL GetThreadInfo(ThreadParams thParams, ThreadInfo &thInfo);
 
 /// <summary>
 /// Checks if a thread exists.

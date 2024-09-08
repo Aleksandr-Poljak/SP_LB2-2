@@ -151,12 +151,73 @@ void CreateWaitingThread(ThreadParams thParams)
 
 }
 
-void SuspendThread(ThreadParams thParams) { MessageBox(NULL, L"Thread 1 suspended", L"Info", MB_OK); }
+void SuspendUserThread(ThreadParams thParams)
+{ 
 
-void ContinueThread(ThreadParams thParamsm) { MessageBox(NULL, L"Thread 1 continued", L"Info", MB_OK); }
+    if (thParams.Num < 0 || thParams.Num > 2)
+    {
+        MessageBox(thParams.hWnd, _T("Incorrect thread number"), _T("Error"), MB_OK | MB_ICONERROR);
+        return;
+    }
 
-void IncreasePriorityThread(ThreadParams thParams) { MessageBox(NULL, L"Thread 1 priority increased", L"Info", MB_OK); }
+    SuspendThread(hSecThread[thParams.Num]);
 
-void DecreasePriorityThread(ThreadParams thParams) { MessageBox(NULL, L"Thread 1 priority decreased", L"Info", MB_OK); }
+}
 
-void ShowThreadInfo(ThreadParams thParams) { MessageBox(NULL, L"Thread 1 information", L"Info", MB_OK); }
+void ContinueThread(ThreadParams thParams) 
+{
+    if (thParams.Num < 0 || thParams.Num > 2)
+    {
+        MessageBox(thParams.hWnd, _T("Incorrect thread number"), _T("Error"), MB_OK | MB_ICONERROR);
+        return;
+    }
+
+    ResumeThread(hSecThread[thParams.Num]);
+}
+
+void IncreasePriorityThread(ThreadParams thParams)
+{ 
+    if (thParams.Num < 0 || thParams.Num > 2)
+    {
+        MessageBox(thParams.hWnd, _T("Incorrect thread number"), _T("Error"), MB_OK | MB_ICONERROR);
+        return;
+    }
+    SetThreadPriority(hSecThread[thParams.Num], THREAD_PRIORITY_TIME_CRITICAL);
+}
+
+void DecreasePriorityThread(ThreadParams thParams)
+{
+    if (thParams.Num < 0 || thParams.Num > 2)
+    {
+        MessageBox(thParams.hWnd, _T("Incorrect thread number"), _T("Error"), MB_OK | MB_ICONERROR);
+        return;
+    }
+    SetThreadPriority(hSecThread[thParams.Num], THREAD_PRIORITY_LOWEST);
+}
+
+BOOL GetThreadInfo(ThreadParams thParams, ThreadInfo &thInfo)
+{ 
+    if (thParams.Num < 0 || thParams.Num > 2)
+    {
+        MessageBox(thParams.hWnd, _T("Incorrect thread number"), _T("Error"), MB_OK | MB_ICONERROR);
+        return FALSE;
+    }
+    if (!IsThreadExist(thParams)) return FALSE;
+
+    thInfo.dwThreadId = GetThreadId(hSecThread[thParams.Num]);
+    thInfo.hThread = hSecThread[thParams.Num];
+    thInfo.dwThreadState = STILL_ACTIVE;
+    thInfo.nThreadPriority = GetThreadPriority(hSecThread[thParams.Num]);
+
+    FILETIME creationTime, exitTime, kernelTime, userTime;
+    GetThreadTimes(hSecThread[thParams.Num], &creationTime, &exitTime, &kernelTime, &userTime);
+    ULARGE_INTEGER ullCreationTime, ullCurrentTime;
+    ullCreationTime.LowPart = creationTime.dwLowDateTime;
+    ullCreationTime.HighPart = creationTime.dwHighDateTime;
+    ullCurrentTime.LowPart = kernelTime.dwLowDateTime + userTime.dwLowDateTime;
+    ullCurrentTime.HighPart = kernelTime.dwHighDateTime + userTime.dwHighDateTime;
+    thInfo.ullThreadStartTime = ullCreationTime.QuadPart;
+
+    return TRUE;
+
+}

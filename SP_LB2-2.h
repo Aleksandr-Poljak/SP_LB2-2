@@ -19,3 +19,8 @@ DWORD WINAPI RunningLine(LPVOID lpParam);
 /// Menu access control
 /// </summary>///
 void ControlMenu(HMENU hMenu);
+
+/// <summary>/// 
+/// Displays thread information.
+/// </summary>
+void ShowThreadInfoDialog(HWND hWnd, const ThreadInfo& threadInfo);

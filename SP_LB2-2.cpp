@@ -93,6 +93,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    HMENU hMenu = GetMenu(hWnd);
    ControlMenu(hMenu);
+   hSecThread[0] = GetCurrentThread();
+   dwSecThreadId[0] = GetThreadId(hSecThread[0]);
+   g_uThCount++;
 
    return TRUE;
 }
@@ -127,13 +130,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             case ID_THREAD1_SUSPEND_THREAD:
             {
                 ThreadParams threadParams1(hWnd, 1);
-                SuspendThread(threadParams1); // Приостанавливаем поток 1
+                SuspendUserThread(threadParams1); // Приостанавливаем поток 1
+                ControlMenu(hMenu);
                 break;
             }
             case ID_THREAD1_CONTINUE_WORK_THREAD:
             {
                 ThreadParams threadParams1(hWnd, 1);
                 ContinueThread(threadParams1); // Возобновляем работу потока 1
+                ControlMenu(hMenu);
                 break;
             }
             case ID_THREAD1_DESTROY_THREAD:
@@ -148,12 +153,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 ThreadParams threadParams1(hWnd, 1);
                 IncreasePriorityThread(threadParams1); // Увеличиваем приоритет потока 1
+                ControlMenu(hMenu);
                 break;
             }
             case ID_THREAD1_DECREASE_PRIORITY:
             {
                 ThreadParams threadParams1(hWnd, 1);
                 DecreasePriorityThread(threadParams1); // Уменьшаем приоритет потока 1
+                ControlMenu(hMenu);
                 break;
             }
                 
@@ -175,13 +182,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             case ID_THREAD2_SUSPEND_THREAD:
             {
                 ThreadParams threadParams2(hWnd, 2); 
-                SuspendThread(threadParams2); // Приостанавливаем поток 2
+                SuspendUserThread(threadParams2); // Приостанавливаем поток 2
+                ControlMenu(hMenu);
                 break;
             }
             case ID_THREAD2_CONTINUE_WORK_THREAD:
             {
                 ThreadParams threadParams2(hWnd, 2); 
                 ContinueThread(threadParams2); // Возобновляем работу потока 2
+                ControlMenu(hMenu);
                 break;
             }
             case ID_THREAD2_DESTROY_THREAD:
@@ -196,32 +205,49 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 ThreadParams threadParams2(hWnd, 2); 
                 IncreasePriorityThread(threadParams2); // Увеличиваем приоритет потока 2
+                ControlMenu(hMenu);
                 break;
             }
             case ID_THREAD2_DECREASE_PRIORITY:
             {
                 ThreadParams threadParams2(hWnd, 2);
                 DecreasePriorityThread(threadParams2); // Уменьшаем приоритет потока 2
+                ControlMenu(hMenu);
                 break;
             }
 
                 // Информация о потоках
             case ID_THREADSINFORMATION_PRIMARY_THREAD:
             {
+                // Информация о основном потоке
                 ThreadParams threadParams0(hWnd, 0);
-                ShowThreadInfo(threadParams0); // Информация о основном потоке
+                ThreadInfo thInfo0;
+                if (GetThreadInfo(threadParams0, thInfo0)) 
+                {
+                    ShowThreadInfoDialog(hWnd, thInfo0);
+                }                    
                 break;
             }
             case ID_THREADSINFORMATION_THREAD1:
             {
+                // Информация о потоке 1
                 ThreadParams threadParams1(hWnd, 1);
-                ShowThreadInfo(threadParams1); // Информация о потоке 1
+                ThreadInfo thInfo1;
+                if (GetThreadInfo(threadParams1, thInfo1))
+                {
+                    ShowThreadInfoDialog(hWnd, thInfo1);
+                }
                 break;
             }
             case ID_THREADSINFORMATION_THREAD2:
             {
+                // Информация о потоке 2
                 ThreadParams threadParams2(hWnd, 2);
-                ShowThreadInfo(threadParams2); // Информация о потоке 2
+                ThreadInfo thInfo2;
+                if (GetThreadInfo(threadParams2, thInfo2))
+                {
+                    ShowThreadInfoDialog(hWnd, thInfo2);
+                }
                 break;
             }
 
