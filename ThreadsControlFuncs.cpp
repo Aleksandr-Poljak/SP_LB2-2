@@ -62,16 +62,22 @@ void CreateUserThread(ThreadParams thParams)
 void DestroyUserThread(ThreadParams thParams, bool quietMode)
 {
     // Проверка на допустимый номер потока
-    if ((thParams.Num < 1 || thParams.Num > 2) && quietMode == FALSE)
+    if (thParams.Num < 0 || thParams.Num > 2)
     {
-        MessageBox(thParams.hWnd, _T("The thread function is not defined"), _T("Error"), MB_OK | MB_ICONERROR);
+        if (!quietMode)
+        {
+            MessageBox(thParams.hWnd, L"The thread function is not defined", L"Error", MB_OK | MB_ICONERROR);
+        }       
         return;
     }
 
     // Проверка, существует ли поток
-    if (!IsThreadExist(thParams) && quietMode == FALSE)
+    if (!IsThreadExist(thParams))
     {
-        MessageBox(thParams.hWnd, _T("The thread descriptor is not valid"), _T("Error"), MB_OK | MB_ICONERROR);
+        if (!quietMode)
+        {
+            MessageBox(thParams.hWnd, L"The thread descriptor is not valid", L"Error", MB_OK | MB_ICONERROR);
+        }       
         return;
     }
 
@@ -79,8 +85,8 @@ void DestroyUserThread(ThreadParams thParams, bool quietMode)
     if ((TerminateThread(hSecThread[thParams.Num], 0) == 0) && quietMode == FALSE)
     {
         DWORD dwError = GetLastError();
-        std::wstring errorMessage = _T("Failed to terminate the thread. Error code: " + std::to_wstring(dwError));
-        MessageBox(thParams.hWnd, errorMessage.c_str(), _T("Error"), MB_OK | MB_ICONERROR);
+        std::wstring errorMessage = L"Failed to terminate the thread. Error code: " + std::to_wstring(dwError);
+        MessageBox(thParams.hWnd, errorMessage.c_str(), L"Error", MB_OK | MB_ICONERROR);
         return;
     }
 

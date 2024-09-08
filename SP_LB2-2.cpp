@@ -91,6 +91,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 
+   HMENU hMenu = GetMenu(hWnd);
+   ControlMenu(hMenu);
+
    return TRUE;
 }
 
@@ -102,7 +105,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
-            // Разобрать выбор в меню:
+            HMENU hMenu = GetMenu(hWnd);
             switch (wmId)
             {
                 // Поток 1
@@ -110,6 +113,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 ThreadParams threadParams1(hWnd, 1, 150, 100);
                 CreateUserThread(threadParams1); // Создаем поток 1
+                ControlMenu(hMenu);
                 break;
             }          
             case ID_THREAD1_CREATE_WAITING_THREAD:
@@ -135,7 +139,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 ThreadParams threadParams1(hWnd, 1);
                 DestroyUserThread(threadParams1, FALSE); // Завершаем поток 1
-                InvalidateRect(hWnd, NULL, TRUE);
+                InvalidateRect(hWnd, NULL, TRUE);     
+                ControlMenu(hMenu);
                 break;
             }
             case ID_THREAD1_INCREASE_PRIORITY:
@@ -156,6 +161,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 ThreadParams threadParams2(hWnd, 2, 150, 140);
                 CreateUserThread(threadParams2); // Создаем поток 2
+                EnableMenuItem(hMenu, ID_THREAD2_CREATE_THREAD, MF_GRAYED);
+                ControlMenu(hMenu);
                 break;
             }
             case ID_THREAD2_CREATE_WAITING_THREAD:
@@ -181,6 +188,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 ThreadParams threadParams2(hWnd, 2); 
                 DestroyUserThread(threadParams2, FALSE); // Завершаем поток 2
                 InvalidateRect(hWnd, NULL, TRUE);
+                ControlMenu(hMenu);
                 break;
             }
             case ID_THREAD2_INCREASE_PRIORITY:

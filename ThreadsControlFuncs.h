@@ -1,7 +1,7 @@
 #include <wtypes.h>
 #include <Windows.h>
 
-// Number of threads. 
+// Number of threads.
 extern DWORD g_uThCount;
 
 // Thread descriptors.
@@ -24,57 +24,57 @@ struct ThreadParams
 };
 
 /// <summary>
-/// Создает новый поток.
+/// Creates a new thread.
 /// </summary>
-/// <param name="thParams">Структура с параметрами потока.</param>
+/// <param name="thParams">Structure containing thread parameters.</param>
 void CreateUserThread(ThreadParams thParams);
 
 /// <summary>
-/// Создает поток, который находится в ожидании.
+/// Creates a thread that is in a waiting state.
 /// </summary>
-/// <param name="thParams">Структура с параметрами потока.</param>
+/// <param name="thParams">Structure containing thread parameters.</param>
 void CreateWaitingThread(ThreadParams thParams);
 
 /// <summary>
-/// Приостанавливает выполнение указанного потока.
+/// Suspends the execution of the specified thread.
 /// </summary>
-/// <param name="thParams">Структура с параметрами потока.</param>
+/// <param name="thParams">Structure containing thread parameters.</param>
 void SuspendThread(ThreadParams thParams);
 
 /// <summary>
-/// Возобновляет выполнение указанного потока.
+/// Resumes the execution of the specified thread.
 /// </summary>
-/// <param name="thParams">Структура с параметрами потока.</param>
+/// <param name="thParams">Structure containing thread parameters.</param>
 void ContinueThread(ThreadParams thParams);
 
 /// <summary>
-/// Завершает указанный поток.
+/// Terminates the specified thread.
 /// </summary>
-/// <param name="thParams">Структура с параметрами потока.</param>
-/// <param name="quietMode">Режим тишины.</param>
+/// <param name="thParams">Structure containing thread parameters.</param>
+/// <param name="quietMode">Silent mode.</param>
 void DestroyUserThread(ThreadParams thParams, bool quietMode);
 
 /// <summary>
-/// Увеличивает приоритет выполнения указанного потока.
+/// Increases the priority of the specified thread.
 /// </summary>
-/// <param name="thParams">Структура с параметрами потока.</param>
+/// <param name="thParams">Structure containing thread parameters.</param>
 void IncreasePriorityThread(ThreadParams thParams);
 
 /// <summary>
-/// Уменьшает приоритет выполнения указанного потока.
+/// Decreases the priority of the specified thread.
 /// </summary>
-/// <param name="thParams">Структура с параметрами потока.</param>
+/// <param name="thParams">Structure containing thread parameters.</param>
 void DecreasePriorityThread(ThreadParams thParams);
 
 /// <summary>
-/// Показывает информацию о указанном потоке.
+/// Displays information about the specified thread.
 /// </summary>
-/// <param name="thParams">Структура с параметрами потока.</param>
+/// <param name="thParams">Structure containing thread parameters.</param>
 void ShowThreadInfo(ThreadParams thParams);
 
 /// <summary>
-/// Проверяет, существует ли поток.
+/// Checks if a thread exists.
 /// </summary>
-/// <param name="thParams">Структура с параметрами потока.</param>
-/// <returns>TRUE, если поток существует, иначе FALSE.</returns>
+/// <param name="thParams">Structure containing thread parameters.</param>
+/// <returns>TRUE if the thread exists, otherwise FALSE.</returns>
 BOOL IsThreadExist(ThreadParams thParams);

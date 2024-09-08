@@ -1,0 +1,54 @@
+#include "SP_LB2-2.h"
+
+void ControlMenu(HMENU hMenu)
+{
+
+	// ”правление меню потока 1
+	if (hSecThread[1] == NULL)
+	{
+		EnableMenuItem(hMenu, ID_THREAD1_CREATE_THREAD, MF_ENABLED);
+		EnableMenuItem(hMenu, ID_THREAD1_CREATE_WAITING_THREAD, MF_ENABLED);
+		EnableMenuItem(hMenu, ID_THREAD1_SUSPEND_THREAD, MF_GRAYED);
+		EnableMenuItem(hMenu, ID_THREAD1_CONTINUE_WORK_THREAD, MF_GRAYED);
+		EnableMenuItem(hMenu, ID_THREAD1_DESTROY_THREAD, MF_GRAYED);
+		EnableMenuItem(hMenu, ID_THREAD1_INCREASE_PRIORITY, MF_GRAYED);
+		EnableMenuItem(hMenu, ID_THREAD1_DECREASE_PRIORITY, MF_GRAYED);
+
+		
+	}
+	else
+	{
+		EnableMenuItem(hMenu, ID_THREAD1_CREATE_THREAD, MF_GRAYED);
+		EnableMenuItem(hMenu, ID_THREAD1_CREATE_WAITING_THREAD, MF_GRAYED);
+		EnableMenuItem(hMenu, ID_THREAD1_SUSPEND_THREAD, MF_ENABLED);
+		EnableMenuItem(hMenu, ID_THREAD1_CONTINUE_WORK_THREAD, MF_ENABLED);
+		EnableMenuItem(hMenu, ID_THREAD1_DESTROY_THREAD, MF_ENABLED);
+		EnableMenuItem(hMenu, ID_THREAD1_INCREASE_PRIORITY, MF_ENABLED);
+		EnableMenuItem(hMenu, ID_THREAD1_DECREASE_PRIORITY, MF_ENABLED);
+	}
+
+
+	// ”правление меню потока 2
+	if (hSecThread[2] == NULL)
+	{
+		EnableMenuItem(hMenu, ID_THREAD2_CREATE_THREAD, MF_ENABLED);
+		EnableMenuItem(hMenu, ID_THREAD2_CREATE_WAITING_THREAD, MF_ENABLED);
+		EnableMenuItem(hMenu, ID_THREAD2_SUSPEND_THREAD, MF_GRAYED);
+		EnableMenuItem(hMenu, ID_THREAD2_CONTINUE_WORK_THREAD, MF_GRAYED);
+		EnableMenuItem(hMenu, ID_THREAD2_DESTROY_THREAD, MF_GRAYED);
+		EnableMenuItem(hMenu, ID_THREAD2_INCREASE_PRIORITY, MF_GRAYED);
+		EnableMenuItem(hMenu, ID_THREAD2_DECREASE_PRIORITY, MF_GRAYED);
+
+
+	}
+	else
+	{
+		EnableMenuItem(hMenu, ID_THREAD2_CREATE_THREAD, MF_GRAYED);
+		EnableMenuItem(hMenu, ID_THREAD2_CREATE_WAITING_THREAD, MF_GRAYED);
+		EnableMenuItem(hMenu, ID_THREAD2_SUSPEND_THREAD, MF_ENABLED);
+		EnableMenuItem(hMenu, ID_THREAD2_CONTINUE_WORK_THREAD, MF_ENABLED);
+		EnableMenuItem(hMenu, ID_THREAD2_DESTROY_THREAD, MF_ENABLED);
+		EnableMenuItem(hMenu, ID_THREAD2_INCREASE_PRIORITY, MF_ENABLED);
+		EnableMenuItem(hMenu, ID_THREAD2_DECREASE_PRIORITY, MF_ENABLED);
+	}
+}
