@@ -17,7 +17,6 @@ BOOL IsThreadExist(ThreadParams thParams)
     return flag;
 }
 
-
 void CreateUserThread(ThreadParams thParams)
 {
     if (thParams.Num < 1 || thParams.Num > 2)
@@ -109,9 +108,55 @@ void DestroyUserThread(ThreadParams thParams, bool quietMode)
     }
 }
 
-void CreateWaitingThread(ThreadParams thParams) { MessageBox(NULL, L"Thread 1 waiting created", L"Info", MB_OK); }
+void CreateWaitingThread(ThreadParams thParams)
+{
+
+    if (thParams.Num < 1 || thParams.Num > 2)
+    {
+        MessageBox(thParams.hWnd, _T("Incorrect thread number"), _T("Error"), MB_OK | MB_ICONERROR);
+        return;
+    }
+
+    // Определение функции для потока
+    LPTHREAD_START_ROUTINE lpThreadFunc = RunningLine;
+    if (lpThreadFunc == NULL)
+    {
+        MessageBox(thParams.hWnd, _T("The thread function is not defined"), _T("Error"), MB_OK | MB_ICONERROR);
+        return;
+    }
+
+    // Создание потока
+    hSecThread[thParams.Num] = CreateThread(
+        NULL,
+        0,
+        lpThreadFunc,
+        &thParams,
+        CREATE_SUSPENDED,
+        &dwSecThreadId[thParams.Num]
+    );
+
+    // Проверка успешного создания потока
+    if (!IsThreadExist(thParams))
+    {
+        MessageBox(thParams.hWnd, _T("Failed to create a thread"), _T("Error"), MB_OK | MB_ICONERROR);
+        return;
+    }
+
+    // Увеличение счетчика потоков
+    g_uThCount++;
+
+    // Сообщение об успешном создании потока
+    std::wstring msg = L"Thread is " + std::to_wstring(thParams.Num) + L" created.";
+    MessageBox(thParams.hWnd, msg.c_str(), L"Info", MB_OK);
+
+}
+
 void SuspendThread(ThreadParams thParams) { MessageBox(NULL, L"Thread 1 suspended", L"Info", MB_OK); }
+
 void ContinueThread(ThreadParams thParamsm) { MessageBox(NULL, L"Thread 1 continued", L"Info", MB_OK); }
+
 void IncreasePriorityThread(ThreadParams thParams) { MessageBox(NULL, L"Thread 1 priority increased", L"Info", MB_OK); }
+
 void DecreasePriorityThread(ThreadParams thParams) { MessageBox(NULL, L"Thread 1 priority decreased", L"Info", MB_OK); }
+
 void ShowThreadInfo(ThreadParams thParams) { MessageBox(NULL, L"Thread 1 information", L"Info", MB_OK); }

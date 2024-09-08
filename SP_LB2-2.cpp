@@ -118,8 +118,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }          
             case ID_THREAD1_CREATE_WAITING_THREAD:
             {
-                ThreadParams threadParams1(hWnd, 1);
+                ThreadParams threadParams1(hWnd, 1, 150, 100);
                 CreateWaitingThread(threadParams1); // Создаем ожидающий поток 1
+                ControlMenu(hMenu);
                 break;
             }
                 
@@ -161,14 +162,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 ThreadParams threadParams2(hWnd, 2, 150, 140);
                 CreateUserThread(threadParams2); // Создаем поток 2
-                EnableMenuItem(hMenu, ID_THREAD2_CREATE_THREAD, MF_GRAYED);
                 ControlMenu(hMenu);
                 break;
             }
             case ID_THREAD2_CREATE_WAITING_THREAD:
             {
-                ThreadParams threadParams2(hWnd, 2); 
+                ThreadParams threadParams2(hWnd, 2, 150, 140);
                 CreateWaitingThread(threadParams2); // Создаем ожидающий поток 2
+                ControlMenu(hMenu);
                 break;
             }
             case ID_THREAD2_SUSPEND_THREAD:
