@@ -73,3 +73,81 @@ void ShowThreadInfoDialog(HWND hWnd, const ThreadInfo& threadInfo)
 	wsprintf(szInfo + lstrlen(szInfo), _T("Rrunning time: %lu milliseconds\n"), ullElapsedTime / 10000);
 	MessageBox(hWnd, szInfo, _T("Thread INFO"), MB_OK | MB_ICONINFORMATION);
 }
+
+void FillSolidRect(HDC hdc, RECT* rect, COLORREF color)
+{
+	HBRUSH hBrush = CreateSolidBrush(color);
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
+	FillRect(hdc, rect, hBrush);
+	SelectObject(hdc, hOldBrush);
+	DeleteObject(hBrush);
+}
+
+DWORD WINAPI MoveRectangle(LPVOID lpParam)
+{
+	ThreadParamsRectangle* params = (ThreadParamsRectangle*)lpParam;
+	HBRUSH hBrush = CreateSolidBrush(RGB(0, 255, 0));  // Зеленый цвет
+
+	RECT rect;
+	HDC hdc;
+	HBRUSH hOldBrush;
+
+	while (!g_bStopAnimation)
+	{
+		hdc = GetDC(params->hWnd);
+		hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
+
+		RECT eraseRect = { params->x, params->y, params->x + params->width, params->y + params->height };
+		FillSolidRect(hdc, &eraseRect, RGB(255, 255, 255));  // Белый цвет фона
+
+		params->x += params->step;
+
+		if (params->x + params->width > 1100 || params->x < 0)
+		{
+			params->step = -params->step;
+		}
+
+		rect.left = params->x;
+		rect.top = params->y;
+		rect.right = params->x + params->width;
+		rect.bottom = params->y + params->height;
+		FillRect(hdc, &rect, hBrush);
+
+		SelectObject(hdc, hOldBrush);
+		ReleaseDC(params->hWnd, hdc);
+
+		Sleep(50);
+	}
+
+	DeleteObject(hBrush);
+	return 0;
+}
+
+void StartAnimation(HWND hWnd)
+{
+	if (hAnimationThread == nullptr)
+	{
+		ThreadParamsRectangle* params = new ThreadParamsRectangle(hWnd, 0, 100, 100, 50, 10);
+
+		hAnimationThread = CreateThread(
+			NULL,                         
+			0,                             
+			MoveRectangle,                 
+			params,                         
+			0,                             
+			NULL                          
+		);
+	}
+}
+
+void StopAnimation()
+{
+	if (hAnimationThread != nullptr)
+	{
+		g_bStopAnimation = true;
+		WaitForSingleObject(hAnimationThread, INFINITE);
+		CloseHandle(hAnimationThread);
+		hAnimationThread = nullptr;
+		g_bStopAnimation = false;
+	}
+}

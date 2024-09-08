@@ -8,9 +8,16 @@ HINSTANCE hInst;                                // текущий экземпл
 WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
 WCHAR szWindowClass[MAX_LOADSTRING];            // имя класса главного окна
 
+
 DWORD g_uThCount = 0;                           //Количество потоков
 HANDLE hSecThread[3] = { nullptr, nullptr, nullptr }; // Дескрипторы потоков
 DWORD dwSecThreadId[3] = { 0, 0, 0 };                  //Идентификаторы потоков
+
+// Анимация прямоугольника в отдельном потоке.
+bool g_bStopAnimation = false;
+HANDLE hAnimationThread = nullptr;
+
+
 
 
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -105,6 +112,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
@@ -251,6 +259,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 break;
             }
 
+            case ID_ANIMATION_START:
+            {
+                StartAnimation(hWnd); 
+                break;
+            }
+
+            case ID_ANIMATION_DESTROY:
+            {
+                StopAnimation();
+                InvalidateRect(hWnd, NULL, TRUE);
+                break;
+            }
+
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
@@ -265,7 +286,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
+            HDC hdc = BeginPaint(hWnd, &ps);         
             EndPaint(hWnd, &ps);
         }
         break;
